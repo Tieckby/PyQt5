@@ -1,13 +1,13 @@
 #coding:utf-8
 
 #Quelques modules nécessaires pour la création de l'application 
-from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog, QMenuBar, QAction, QMessageBox, QLabel, QVBoxLayout
+from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QMenuBar, QAction, QMessageBox, QLabel, QVBoxLayout)
 from PyQt5 import QtGui
 from PyQt5.QtGui import QIcon
 
 import sys #Importation des ressources système
 
-class Window(QMainWindow, QDialog):
+class Window(QMainWindow):
     def __init__(self):
         super().__init__()
 
@@ -26,15 +26,19 @@ class Window(QMainWindow, QDialog):
         self.setWindowIcon(QtGui.QIcon(self.icon)) #L'icône de la fenêtre
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
+        widget = QWidget()
+        self.setCentralWidget(widget)
 
-        #Ajout du texte et l'image à la fenêtre
-        # vbox = QVBoxLayout()
-        # label = QLabel("Bonjour tout le monde")
-        # label.setFont(QtGui.QFont("Sanserif", 20)) #Le style et la taille
-        # label.setStyleSheet('color:green') #Coleur du texte
+        #Ajout du texte à la fenêtre
+        layout = QVBoxLayout()
+        widget.setLayout(layout)
 
-        # vbox.addWidget(label)
-        # self.setLayout(vbox)
+        label = QLabel("Bonjour tout le monde")
+        label.setFont(QtGui.QFont("Sanserif", 20)) #Le style et la taille
+        label.setStyleSheet('color:green') #Coleur du texte
+
+        layout.addWidget(label)
+        self.setLayout(layout)
 
 
         self.appMenu()
