@@ -1,7 +1,7 @@
 #coding:utf-8
 
 #Quelques modules nécessaires pour la création de l'application 
-from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QMenuBar, QAction, QMessageBox, QLabel, QVBoxLayout)
+from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QMenuBar, QAction, QMessageBox, QDialog, QComboBox, QLabel, QLineEdit, QVBoxLayout)
 from PyQt5 import QtGui
 from PyQt5.QtGui import QIcon
 
@@ -26,24 +26,56 @@ class Window(QMainWindow):
         self.setWindowIcon(QtGui.QIcon(self.icon)) #L'icône de la fenêtre
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
-        widget = QWidget()
-        self.setCentralWidget(widget)
-
-        #Ajout du texte à la fenêtre
-        layout = QVBoxLayout()
-        widget.setLayout(layout)
-
-        label = QLabel("Bonjour tout le monde")
-        label.setFont(QtGui.QFont("Sanserif", 20)) #Le style et la taille
-        label.setStyleSheet('color:green') #Coleur du texte
-
-        layout.addWidget(label)
-        self.setLayout(layout)
-
 
         self.appMenu()
-
+        self.comboBox()
         self.show() #Affiche la fenêtre
+    
+    def comboBox(self):
+        vbox = QVBoxLayout()
+
+        self.combo = QComboBox(self)
+
+        for i in range(1, 10):
+            self.combo.addItem(f"{i}")
+        self.combo.move(50, 50)
+        self.combo.currentTextChanged.connect(self.comboSelect)
+
+    def comboSelect(self):
+        try:
+            number = int(self.combo.currentText())
+            if number in range(1, 10):
+                for i in range(1,  11):
+                    res = number * i
+                    print(f"{number} * {i} = {res}")
+        except:
+            pass
+    
+    def onPressedEntry(self):
+        self.label.setText(self.lineedit.text())
+    
+    # def lineEdit(self):
+    #     widget = QWidget()
+    #     self.setCentralWidget(widget)
+
+    #     #Ajout du texte à la fenêtre
+    #     layout = QVBoxLayout()
+    #     # widget.setLayout(layout)
+
+    #     self.label = QLabel(self)
+    #     # label.setStyleSheet('color:green') #Coleur du texte
+
+    #     layout.addWidget(self.label)
+
+    #     #Ajout d'un champ QLineEdit
+    #     lineedit = QLineEdit(self)
+    #     lineedit.setFont(QtGui.QFont("Sanserif", 10)) #Le style et la taille de la saisie
+    #     resultInput = lineedit.returnPressed.connect(self.onPressedEntry) #On capture la saisie et on l'affiche
+    #     layout.addWidget(lineedit)
+
+    #     label1 = QLabel(f"Le resultat est : {resultInput}")
+    #     label1.setFont(QtGui.QFont("Sanserif", 20))
+    #     layout.addWidget(label1)
     
     #Création du menu
     def appMenu(self):
@@ -56,16 +88,30 @@ class Window(QMainWindow):
         exitApp = mainMenu.addMenu("Quitter")
 
         #Action sur les différentes Menu
-        calculOperationMenuAction = QAction(QIcon("twitter_icon.png"), 'Copy',self)
+        calculOperationMenuAction = QAction(QIcon("Calc.png"), 'Calcul simple', self)
         calculOperationMenuAction.setShortcut("CTRL+E")
+        # calculOperationMenuAction.triggered.connect(self.lineEdit)
         calculOperationMenu.addAction(calculOperationMenuAction)
 
-        helpAppAction = QAction(QIcon("twitter_icon.png"), 'aide',self)
+        add = QAction(QIcon("Calc.png"), "Addition", self)
+        add.triggered.connect(self.comboBox)
+        operatorTable.addAction(add)
+        subs = QAction(QIcon("Calc.png"), "Soustraction", self)
+        subs.triggered.connect(self.comboBox)
+        operatorTable.addAction(subs)
+        mult = QAction(QIcon("Calc.png"), "Mutiplication", self)
+        mult.triggered.connect(self.comboBox)
+        operatorTable.addAction(mult)
+        divid = QAction(QIcon("Calc.png"), "Division", self)
+        divid.triggered.connect(self.comboBox)
+        operatorTable.addAction(divid)
+
+        helpAppAction = QAction(QIcon("help.png"), 'A propos', self)
         helpAppAction.setShortcut("CTRL+H")
         helpAppAction.triggered.connect(self.helpfonction)
         helpApp.addAction(helpAppAction)
 
-        exitAppAction = QAction(QIcon("twitter_icon.png"), 'quitter',self)
+        exitAppAction = QAction(QIcon("exit.png"), 'quitter', self)
         exitAppAction.setShortcut("CTRL+X")
         exitAppAction.triggered.connect(self.exitFonction)
         exitApp.addAction(exitAppAction)
